@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Campus System</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: linear-gradient(135deg, #f0f4ff, #d9e4ff);
+      display: flex;
+      justify-content: center;
+      padding-top: 50px;
+    }
+
+    .container {
+      display: flex;
+      flex-direction: column;
+      width: 400px;
+    }
+
+    .section {
+      background: white;
+      padding: 20px 25px;
+      margin: 10px 0;
+      border-radius: 12px;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+      transition: transform 0.3s;
+    }
+
+    .section:hover {
+      transform: translateY(-3px);
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 15px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      color: white;
+      padding: 10px;
+      border-radius: 8px;
+    }
+
+    .course h2 { background-color: #3f51b5; }
+    .student h2 { background-color: #4caf50; }
+    .attendance h2 { background-color: #ff9800; }
+
+    input, button {
+      width: 100%;
+      padding: 10px;
+      margin: 5px 0;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      font-size: 14px;
+      box-sizing: border-box;
+    }
+
+    button {
+      background-color: #607d8b;
+      color: white;
+      border: none;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    button:hover {
+      background-color: #455a64;
+    }
+
+    .icon {
+      margin-right: 8px;
+      font-size: 22px;
+    }
+  </style>
+  <script>
+    const API = "https://0delehh3jj.execute-api.eu-north-1.amazonaws.com/prod";
+
+    async function sendRequest(endpoint, body) {
+      try {
+        let res = await fetch(API + endpoint, {
+          method: "POST",
+          headers: { 
+            "Content-Type": "application/json",
+            "Accept": "application/json"
+          },
+          body: JSON.stringify(body)
+        });
+
+        let data = await res.json();
+        console.log("Response:", data);
+        if (!res.ok) {
+          throw new Error(data.error || JSON.stringify(data));
+        }
+        alert(data.message || "Success!");
+      } catch (err) {
+        console.error("Error:", err);
+        alert("❌ Error: " + err.message);
+      }
+    }
+
+    function addCourse() {
+      const body = {
+        course_id: document.getElementById("course_id").value,
+        name: document.getElementById("course_name").value
+      };
+      sendRequest("/courses", body);
+    }
+
+    function addStudent() {
+      const body = {
+        student_id: document.getElementById("student_id").value,
+        name: document.getElementById("student_name").value
+      };
+      sendRequest("/students", body);
+    }
+
+    function recordAttendance() {
+      const body = {
+        course_id: document.getElementById("att_course").value,
+        date_student: document.getElementById("att_date_student").value,
+        status: document.getElementById("att_status").value
+      };
+      sendRequest("/attendance", body);
+    }
+  </script>
+</head>
+<body>
+  <div class="container">
+
+    <div class="section course">
+      <h2><span class="icon">📚</span> Add Course</h2>
+      <input id="course_id" placeholder="Course ID">
+      <input id="course_name" placeholder="Course Name">
+      <button onclick="addCourse()">Add</button>
+    </div>
+
+    <div class="section student">
+      <h2><span class="icon">👨‍🎓</span> Add Student</h2>
+      <input id="student_id" placeholder="Student ID">
+      <input id="student_name" placeholder="Name">
+      <button onclick="addStudent()">Add</button>
+    </div>
+
+    <div class="section attendance">
+      <h2><span class="icon">📝</span> Record Attendance</h2>
+      <input id="att_course" placeholder="Course ID">
+      <input id="att_date_student" placeholder="Date#StudentID">
+      <input id="att_status" placeholder="Status (present/absent)">
+      <button onclick="recordAttendance()">Record</button>
+    </div>
+
+  </div>
+</body>
+</html>
