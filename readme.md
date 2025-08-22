@@ -14,7 +14,7 @@ It allows adding courses, registering students, and recording attendance with a 
   - Students
   - Attendance
 
-![Architecture](campus system/campus_system.png)
+![Architecture](campus_system.png)
 
 ---
 
@@ -45,5 +45,6 @@ It allows adding courses, registering students, and recording attendance with a 
 
 ## 📌 Author
 Built with ❤️ using AWS by [kyrellos hany].
+
 
 
